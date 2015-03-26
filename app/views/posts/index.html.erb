@@ -1,4 +1,22 @@
 <% if user_signed_in? %>
   <h4>Hello! <%= current_user.username %> </h4>
-<% else %>
 <% end %>
+
+<% if @posts.any? %>
+<h4>Current Listings</h4>
+  <ul>
+    <% @posts.each do |post| %>
+      <li> <%= link_to post.title, post_path(post) %> Posted By: <%= post.user_id %>
+        <% if user_signed_in? && current_user.id == post.user_id %>
+          <small><%= link_to '(delete)', post_path(post),
+                                        :data => {:confirm => 'Are you sure?',
+                                        :method => 'delete' } %></small>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <h4>No Listings Active!</h4>
+<% end %>
+
+<%= link_to "Add Listing", new_post_path, class: 'btn btn-success btn-md' %>
